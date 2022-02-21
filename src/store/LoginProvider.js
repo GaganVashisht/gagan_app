@@ -5,7 +5,11 @@ export default function SignupProvider(props) {
   const navigate = useNavigate();
   const loginMethod = async (data) => {
     console.log(data.email, data.pass);
-    navigate("/userDetails");
+    // if(data.role==="Admin")
+    // navigate("/userDetails");
+    // else{
+    navigate("/dashboard");
+    // }
   };
   return (
     <LoginContext.Provider value={loginMethod}>

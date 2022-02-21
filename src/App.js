@@ -6,6 +6,7 @@ import Signup from "./Components/Signup";
 import UserAdmin from "./Components/UserAdmin";
 import Home from "./Components/Home";
 import UserProvider from "./store/UserProvider";
+import DashBoard from './Components/Dashboard';
 export default function App() {
   return (
     <Router>
@@ -16,6 +17,8 @@ export default function App() {
               <Route path="/" element={<Home />} exact />
               <Route path="/userDetails" element={<UserAdmin />} exact />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<DashBoard />} exact />
+
             </Routes>
           </SignupProvider>
         </LoginProvider>

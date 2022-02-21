@@ -5,10 +5,15 @@ import classes from "./UserAdmin.module.css";
 import Modal from "../UI/Modal";
 import AddUser from "./AddUser";
 import User from "../model/User";
+
+// import DownArrow from "material-ui/svg-icons/navigation";
+
 const UserAdmin = () => {
   const userContext = useContext(UserContext);
   const [portalOpened, openPortal] = useState(false);
 
+  const [order, setOrder] = useState("ASC");
+  const [sortKey, setSortKey] = useState();
   const data = userContext.users;
   const onConfirm = (data) => {
     console.log("Confirmed");
@@ -21,45 +26,89 @@ const UserAdmin = () => {
     console.log("dddddddddd");
     openPortal(true);
   };
+
   const onClose = () => {
     openPortal(false);
   };
+
+  const sorting = (col) => {
+    setSortKey(col);
+    if (order === "ASC") {
+      const sorted = [...data].sort((a, b) => (a[col] > b[col] ? 1 : -1));
+      userContext.users = sorted;
+      setOrder("DSC");
+    }
+    if (order === "DSC") {
+      const sorted = [...data].sort((a, b) => (a[col] < b[col] ? 1 : -1));
+      userContext.users = sorted;
+      setOrder("ASC");
+    }
+    console.log(order, sortKey);
+  };
+
   return (
     <div className={classes.mar}>
       <div className={classes.txt}>User Administration</div>
 
       <div className={"table  table-responsive "}>
         <table className="table table-light  ">
-          <tr className="table-info">
-            <th> UserId </th>
-            <th> Name </th>
-            <th> Active From </th>
-            <th> Role </th>
-            <th> Status</th>
-            <th> </th>
-          </tr>
-          {data.map((element, key) => (
-            <tr className="table-success">
-              <th> {element.userId} </th>
-              <th> {element.name} </th>
-              <th> {element.activeFrom}</th>
-              <th> {element.role} </th>
-              <th> {element.status}</th>
-              {
-                <th>
-                  <button
-                    onClick={() => {
-                      onConfirm(element);
-                    }}
-                    disabled={element.status === "Requested" ? false : true}
-                    className={classes.confirmButton}
-                  >
-                    Confirm
-                  </button>
-                </th>
-              }
+          <thead>
+            <tr className="table-info">
+              <th
+                onClick={() => {
+                  sorting("userId");
+                }}
+              >
+                {" "}
+                <div>
+                  User Id{" "}
+                  {"userId" === sortKey
+                    ? "ASC" === order
+                      ? "asc"
+                      : "desc"
+                    : ""}
+                </div>
+              </th>
+              <th
+                onClick={() => {
+                  sorting("name");
+                }}
+              >
+                <div>
+                  Name{" "}
+                  {"name" === sortKey ? ("ASC" === order ? "asc" : "desc") : ""}
+                </div>
+              </th>
+              <th> Active From </th>
+              <th> Role </th>
+              <th> Status</th>
+              <th> </th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {data.map((element, key) => (
+              <tr className="table-success">
+                <td> {element.userId} </td>
+                <td> {element.name} </td>
+                <td> {element.activeFrom}</td>
+                <td> {element.role} </td>
+                <td> {element.status}</td>
+                {
+                  <td>
+                    <button
+                      onClick={() => {
+                        onConfirm(element);
+                      }}
+                      disabled={element.status === "Requested" ? false : true}
+                      // className={classes.confirmButton}
+                    >
+                      Confirm
+                    </button>
+                  </td>
+                }
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
       {portalOpened && (

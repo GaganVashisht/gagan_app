@@ -6,9 +6,9 @@ export default function SignupProvider(props) {
   const loginMethod = async (data) => {
     console.log(data.email, data.pass);
     // if(data.role==="Admin")
-    // navigate("/userDetails");
+    navigate("/userDetails");
     // else{
-    navigate("/dashboard");
+    // navigate("/dashboard");
     // }
   };
   return (

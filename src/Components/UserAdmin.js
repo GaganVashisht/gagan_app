@@ -5,6 +5,7 @@ import classes from "./UserAdmin.module.css";
 import Modal from "../UI/Modal";
 import AddUser from "./AddUser";
 import User from "../model/User";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 
 // import DownArrow from "material-ui/svg-icons/navigation";
 
@@ -34,12 +35,12 @@ const UserAdmin = () => {
   const sorting = (col) => {
     setSortKey(col);
     if (order === "ASC") {
-      const sorted = [...data].sort((a, b) => (a[col] > b[col] ? 1 : -1));
+      const sorted = [...data].sort((a, b) => (a[col] < b[col] ? 1 : -1));
       userContext.users = sorted;
       setOrder("DSC");
     }
     if (order === "DSC") {
-      const sorted = [...data].sort((a, b) => (a[col] < b[col] ? 1 : -1));
+      const sorted = [...data].sort((a, b) => (a[col] > b[col] ? 1 : -1));
       userContext.users = sorted;
       setOrder("ASC");
     }
@@ -62,11 +63,15 @@ const UserAdmin = () => {
                 {" "}
                 <div>
                   User Id{" "}
-                  {"userId" === sortKey
-                    ? "ASC" === order
-                      ? "asc"
-                      : "desc"
-                    : ""}
+                  {"userId" === sortKey ? (
+                    "ASC" === order ? (
+                      <AiFillCaretUp />
+                    ) : (
+                      <AiFillCaretDown></AiFillCaretDown>
+                    )
+                  ) : (
+                    ""
+                  )}
                 </div>
               </th>
               <th
@@ -76,7 +81,15 @@ const UserAdmin = () => {
               >
                 <div>
                   Name{" "}
-                  {"name" === sortKey ? ("ASC" === order ? "asc" : "desc") : ""}
+                  {"name" === sortKey ? (
+                    "ASC" === order ? (
+                      <AiFillCaretUp />
+                    ) : (
+                      <AiFillCaretDown></AiFillCaretDown>
+                    )
+                  ) : (
+                    ""
+                  )}
                 </div>
               </th>
               <th> Active From </th>

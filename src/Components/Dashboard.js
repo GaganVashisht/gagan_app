@@ -1,8 +1,10 @@
 import classes from "./Dashboard.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-const DashBoard = () => {
+import { CSVLink } from "react-csv";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+const DashBoard = (props) => {
   // const userContext = useContext(UserContext);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -43,40 +45,61 @@ const DashBoard = () => {
       totalAllowance: "dfa",
     },
   ];
+  const headers = [
+    { label: "Name", key: "name" },
+    { label: "SAP Id", key: "sapId" },
+    { label: "project Hours", key: "projectHours" },
+    { label: "Holiday", key: "holiday" },
+    { label: "Af Shift", key: "afternoonShift" },
+    { label: "night sht", key: "nightShift" },
+    { label: "days ta", key: "daysTa" },
+    { label: "transport allowance", key: "transportAllowance" },
+    { label: "totalAllowance", key: "totalAllowance" },
+  ];
+  const csvReport = {
+    data: data,
+    headers: headers,
+    filename: "Allowance_Report.csv",
+  };
+
   const [sortData, setSortData] = useState(data);
   // const [arr, setArrData] = useState(data);
   //   const [portalOpened, openPortal] = useState(false);
 
   // setArrData(data);
+  useEffect(() => {
+    setSortData(data);
+  }, []);
   const sorting = (col) => {
     setSortKey(col);
     if (order === "ASC") {
-      const sorted = [...data].sort((a, b) => (a[col] > b[col] ? 1 : -1));
+      const sorted = [...data].sort((a, b) => (a[col] < b[col] ? 1 : -1));
       // setArrData(sorted);
-      // setSortData(sorted);
+      data = sorted;
+      setSortData(sorted);
       // data = arr;
       setOrder("DSC");
     }
     if (order === "DSC") {
-      const sorted = [...data].sort((a, b) => (a[col] < b[col] ? 1 : -1));
+      const sorted = [...data].sort((a, b) => (a[col] > b[col] ? 1 : -1));
       // userContext.users = sorted;
       // setArrData(sorted);
-      // data = arr;
+      data = sorted;
+      setSortData(sorted);
+
       setOrder("ASC");
     }
     console.log("sorting", sortKey, order);
   };
 
   // const data = userContext.users;
-  const onSubmit = () => {
-    // download csv
-  };
+
   return (
     <div>
       <div className={classes.txt}>Allowance DashBoard</div>
       <div className="container">
         <label className={classes.lbl}>Project</label>
-        <select>
+        <select defaultValue={"none"}>
           <option value="none" selected disabled hidden>
             Select an Option
           </option>
@@ -117,11 +140,15 @@ const DashBoard = () => {
                 >
                   {" "}
                   Name{" "}
-                  {"userId" === sortKey
-                    ? "ASC" === order
-                      ? "asc"
-                      : "desc"
-                    : ""}
+                  {"name" === sortKey ? (
+                    "ASC" === order ? (
+                      <AiFillCaretUp />
+                    ) : (
+                      <AiFillCaretDown></AiFillCaretDown>
+                    )
+                  ) : (
+                    ""
+                  )}
                 </th>
                 <th
                   onClick={() => {
@@ -130,11 +157,15 @@ const DashBoard = () => {
                 >
                   {" "}
                   SAP Id{" "}
-                  {"userId" === sortKey
-                    ? "ASC" === order
-                      ? "asc"
-                      : "desc"
-                    : ""}
+                  {"sapId" === sortKey ? (
+                    "ASC" === order ? (
+                      <AiFillCaretUp />
+                    ) : (
+                      <AiFillCaretDown></AiFillCaretDown>
+                    )
+                  ) : (
+                    ""
+                  )}
                 </th>
                 <th> Project Hours </th>
                 <th> Holiday/ leaves hours </th>
@@ -146,7 +177,7 @@ const DashBoard = () => {
                 {/* <th></th> */}
               </tr>
             </thead>
-            {data.map((element, key) => (
+            {sortData.map((element, key) => (
               <tbody>
                 <tr className="table-success">
                   <td> {element.name} </td>
@@ -179,12 +210,12 @@ const DashBoard = () => {
             ))}
           </table>
         </div>
-
-        <button className={classes.addButton} onClick={onSubmit}>
-          Download
-        </button>
+        <CSVLink {...csvReport}>
+          <button className={classes.addButton}>Download</button>
+        </CSVLink>
       </div>
     </div>
   );
 };
+
 export default DashBoard;

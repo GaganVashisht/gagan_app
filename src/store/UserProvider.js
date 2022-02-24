@@ -28,7 +28,7 @@ const userReducer = (state, action) => {
       users: updatedUsers,
     };
   }
-  if (action.type === "UPDATE_STATUS") {
+  if (action.type === "UPDATE_USER") {
     let index;
 
     for (let i = 0; i < state.users.length; i++) {
@@ -40,14 +40,14 @@ const userReducer = (state, action) => {
       }
     }
 
-    const newUser = new User(
-      action.user.userId,
-      action.user.name,
-      action.user.activeFrom,
-      action.user.role,
-      action.status
-    );
-    state.users[index] = newUser;
+    // const newUser = new User(
+    //   action.user.userId,
+    //   action.user.name,
+    //   action.user.activeFrom,
+    //   action.user.role,
+    //   action.status
+    // );
+    state.users[index] = action.changedUser;
     const updatedUsers = [...state.users];
 
     return {
@@ -68,11 +68,11 @@ export default function UserProvider(props) {
     dispatchUserAction({ type: "ADD", user: user });
   };
 
-  const updateUserHandler = (user, newStatus) => {
+  const updateUserHandler = (user, changedUser) => {
     dispatchUserAction({
-      type: "UPDATE_STATUS",
+      type: "UPDATE_USER",
       user: user,
-      status: newStatus,
+      changedUser: changedUser,
     });
   };
   const currentContext = {

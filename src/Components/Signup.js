@@ -17,7 +17,12 @@ const Signup = (props) => {
     pass: true,
     role: true,
   });
-
+  const checkIncedo = (email) => {
+    // hfasd@incedoinc.com
+    const list = email.split("@");
+    if (list[1] === "incedoinc.com") return true;
+    return false;
+  };
   const emailInputRef = useRef();
   const passInputRef = useRef();
   const roleInputRef = useRef();
@@ -28,9 +33,11 @@ const Signup = (props) => {
     const enteredPass = passInputRef.current.value;
     const enteredRole = roleInputRef.current.value;
     const enteredEmailIsValid =
-      !isEmpty(enteredEmail) && isValidEmail(enteredEmail);
+      !isEmpty(enteredEmail) &&
+      isValidEmail(enteredEmail) &&
+      checkIncedo(enteredEmail);
     const enteredPassIsValid = !isEmpty(enteredPass) && isSixChars(enteredPass);
-    const enteredRoleIsValid = enteredRole != "none";
+    const enteredRoleIsValid = enteredRole !== "none";
     setFormInputsValidity({
       email: enteredEmailIsValid,
       pass: enteredPassIsValid,
@@ -80,13 +87,13 @@ const Signup = (props) => {
         </div>
         <label for="roles">Choose a role: </label>
         <div>
-          <select name="roles" id="roles" ref={roleInputRef}>
+          <select name="roles" id="roles" ref={roleInputRef} key={new Date()}>
             <option value="none" selected disabled hidden>
               Select an Option
             </option>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-            <option value="developer">Developer</option>
+            <option value="Lead">Lead</option>
+            <option value="Admin">Admin</option>
+            <option value="Developer">Developer</option>
           </select>
           {!formInputsValidity.role && <p>Please select a role!</p>}
         </div>

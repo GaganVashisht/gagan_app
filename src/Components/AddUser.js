@@ -14,6 +14,12 @@ const AddUser = (props) => {
     pass: true,
     role: true,
   });
+  const checkIncedo = (email) => {
+    // hfasd@incedoinc.com
+    const list = email.split("@");
+    if (list[1] === "incedoinc.com") return true;
+    return false;
+  };
   const emailInputRef = useRef();
   const passInputRef = useRef();
   const roleInputRef = useRef();
@@ -26,7 +32,8 @@ const AddUser = (props) => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPass = passInputRef.current.value;
     const enteredRole = roleInputRef.current.value;
-    const enteredEmailIsValid = !isEmpty(enteredEmail);
+    const enteredEmailIsValid =
+      !isEmpty(enteredEmail) && checkIncedo(enteredEmail);
     const enteredPassIsValid = !isEmpty(enteredPass) && isSixChars(enteredPass);
     const enteredRoleIsValid = enteredRole != "none";
     setFormInputsValidity({
@@ -41,12 +48,13 @@ const AddUser = (props) => {
     if (!formIsValid) {
       return;
     }
-
+    const date = new Date().toLocaleString();
+    const formatDate = date.split(",")[0];
     userContext.addUser(
       new User(
         new Date().toLocaleString(),
         enteredEmail,
-        new Date().toLocaleString(),
+        formatDate,
         enteredRole,
         "Requested"
       )
@@ -56,7 +64,7 @@ const AddUser = (props) => {
     //   pass: enteredPass,
     //   role: enteredRole,
     // });
-
+    console.log(userContext.users);
     emailInputRef.current.value = "";
     passInputRef.current.value = "";
     roleInputRef.current.value = "none";
@@ -120,13 +128,14 @@ const AddUser = (props) => {
           id="roles"
           className="form-control"
           ref={roleInputRef}
+          key={new Date()}
         >
           <option value="none" selected disabled hidden>
             Select role
           </option>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-          <option value="developer">Developer</option>
+          <option value="Lead">Lead</option>
+          <option value="Admin">Admin</option>
+          <option value="Developer">Developer</option>
           {/* <option *ngFor="let r of roles" [value]="r.name">{{r.name}}</option> */}
         </select>
         {!formInputsValidity.role && <p>Select a role!</p>}

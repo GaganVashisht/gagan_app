@@ -100,4 +100,14 @@
   padding-right: 1%;
   padding-bottom: 1%;
   padding-top: 1%;
+  padding-left: 2%;
+}
+
+.row {
+  display: flex;
+  margin-right: 1%;
+}
+
+.pad {
+  padding-left: 10%;
 }

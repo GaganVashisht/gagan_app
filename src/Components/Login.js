@@ -7,8 +7,15 @@ const isEmpty = (value) => value.trim() === "";
 const isSixChars = (value) => value.trim().length >= 6;
 function isValidEmail(email) {
   var re = /\S+@\S+\.\S+/;
+
   return re.test(email);
 }
+const checkIncedo = (email) => {
+  // hfasd@incedoinc.com
+  const list = email.split("@");
+  if (list[1] === "incedoinc.com") return true;
+  return false;
+};
 const Login = (props) => {
   const context = useContext(LoginContext);
   const [formInputsValidity, setFormInputsValidity] = useState({
@@ -26,7 +33,9 @@ const Login = (props) => {
     const enteredPass = passInputRef.current.value;
 
     const enteredEmailIsValid =
-      !isEmpty(enteredEmail) && isValidEmail(enteredEmail);
+      !isEmpty(enteredEmail) &&
+      isValidEmail(enteredEmail) &&
+      checkIncedo(enteredEmail);
     const enteredPassIsValid = !isEmpty(enteredPass) && isSixChars(enteredPass);
 
     setFormInputsValidity({
@@ -82,7 +91,7 @@ const Login = (props) => {
       </form>
       <p>
         New user?
-        <Link to="/signup">Signup</Link>
+        <Link to="/signup">Request Access</Link>
       </p>
     </Card>
   );
